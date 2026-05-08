@@ -3,45 +3,32 @@ package com.example.laporkita.ui.home
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.laporkita.ui.theme.LaporKitaTheme
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             LaporKitaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Greeting()
                 }
             }
         }
     }
-}
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting() {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        "Afgan Irwansyah Hidayat",
+        modifier = Modifier.fillMaxSize()
+            .wrapContentSize(),
+        fontSize = 30.sp
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LaporKitaTheme {
-        Greeting("Afgan")
-    }
-}
