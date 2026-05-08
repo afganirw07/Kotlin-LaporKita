@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import com.example.laporkita.R
-import com.example.laporkita.ui.home.MainActivity
+import com.example.laporkita.ui.onboarding.OnBoardingActivity
 
 class SplashActivity : ComponentActivity() {
 
@@ -23,7 +23,7 @@ class SplashActivity : ComponentActivity() {
 
         setContent {
             SplashScreen {
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, OnBoardingActivity::class.java))
                 finish()
             }
         }

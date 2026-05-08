@@ -12,12 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LaporKita">
         <activity
-            android:name=".ui.onboarding.OnBoarding"
+            android:name=".ui.home.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_on_boarding"
             android:theme="@style/Theme.LaporKita" />
         <activity
-            android:name=".ui.home.MainActivity"
+            android:name=".ui.onboarding.OnBoardingActivity"
             android:exported="false"
             android:label="@string/title_activity_splash"
             android:theme="@style/Theme.LaporKita" />
