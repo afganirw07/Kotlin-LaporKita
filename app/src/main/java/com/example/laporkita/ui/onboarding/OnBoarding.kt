@@ -1,6 +1,7 @@
 package com.example.laporkita.ui.onboarding
 
 import android.os.Bundle
+import android.service.autofill.OnClickAction
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -11,7 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,28 +35,74 @@ class OnBoardingActivity : ComponentActivity() {
     }
 }
 
-
 val Roboto = FontFamily(
     Font(R.font.roboto_regular)
 )
 
+data class OnBoardingItem(
+    val image: Int,
+    val title: String,
+    val description: String,
+    val buttonText: String
+)
+
+val onboardingData = listOf(
+    OnBoardingItem(
+        R.drawable.boarding1,
+        "Laporkan Masalah\nDengan Mudah",
+        "Kirim laporan hanya dalam beberapa langkah, tanpa proses yang rumit.",
+        "Selanjutnya"
+    ),
+    OnBoardingItem(
+        R.drawable.boarding2,
+        "Masuk untuk Akses\nPenuh",
+        "Login untuk mengirim laporan, melacak progres, dan mendapatkan notifikasi secara real-time.",
+        "Selanjutnya"
+    ),
+    OnBoardingItem(
+        R.drawable.boarding3,
+        "Pantau Progres Laporan",
+        "Lihat status dan perkembangan laporanmu secara transparan dan real-time.",
+        "Mulai Sekarang"
+    )
+)
 
 @Composable
 fun OnBoardingScreen() {
+    var currentPage by remember { mutableStateOf(0) }
+
+    val item = onboardingData[currentPage]
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Header()
+        Header(
+            currentPage = currentPage,
+            onSkipClick = {
+                currentPage = onboardingData.lastIndex
+            }
+        )
 
         Content(
+            item = item,
+            currentPage = currentPage,
+            onNextClick = {
+                if (currentPage < onboardingData.lastIndex) {
+                    currentPage++
+                } else {
+                    println("HelloWorld")
+                }
+            },
             modifier = Modifier.align(Alignment.Center)
         )
     }
 }
 
-
 @Composable
-fun Header() {
+fun Header(
+    currentPage: Int,
+    onSkipClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,20 +116,26 @@ fun Header() {
             modifier = Modifier.size(120.dp)
         )
 
-        TextButton(onClick = { println("Hello World") }) {
-            Text(
-                text = "Lewati",
-                fontFamily = Roboto,
-                fontSize = 14.sp,
-                color = Color(0xFF6B7280)
-            )
-        }
+       if (currentPage != onboardingData.lastIndex){
+           TextButton(onClick = onSkipClick) {
+               Text(
+                   text = "Lewati",
+                   fontFamily = Roboto,
+                   fontSize = 14.sp,
+                   color = Color(0xFF6B7280)
+               )
+           }
+       }
     }
 }
 
-
 @Composable
-fun Content(modifier: Modifier = Modifier) {
+fun Content(
+    item: OnBoardingItem,
+    currentPage: Int,
+    onNextClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -91,34 +144,36 @@ fun Content(modifier: Modifier = Modifier) {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.boarding1),
-            contentDescription = "Onboarding Image",
-            modifier = Modifier.size(320.dp)
+            painter = painterResource(id = item.image),
+            contentDescription = null,
+            modifier = Modifier.size(400.dp)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        TitleText()
-        DescriptionText()
+        TitleText(item.title)
+        DescriptionText(item.description)
 
         Spacer(modifier = Modifier.height(32.dp))
 
         DotsIndicator(
-            totalDots = 3,
-            selectedIndex = 0
+            totalDots = onboardingData.size,
+            selectedIndex = currentPage
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        NextButton()
+        NextButton(
+            text = item.buttonText,
+            onClick = onNextClick
+        )
     }
 }
 
-
 @Composable
-fun TitleText() {
+fun TitleText(text: String) {
     Text(
-        text = "Laporkan Masalah\nDengan Mudah",
+        text = text,
         fontSize = 32.sp,
         fontWeight = FontWeight.Bold,
         lineHeight = 38.sp,
@@ -129,9 +184,9 @@ fun TitleText() {
 }
 
 @Composable
-fun DescriptionText() {
+fun DescriptionText(text: String) {
     Text(
-        text = "Kirim laporan hanya dalam beberapa langkah, tanpa proses yang rumit.",
+        text = text,
         fontSize = 15.sp,
         lineHeight = 22.sp,
         fontFamily = Roboto,
@@ -141,11 +196,13 @@ fun DescriptionText() {
     )
 }
 
-
 @Composable
-fun NextButton() {
+fun NextButton(
+    text: String,
+    onClick: () -> Unit
+) {
     Button(
-        onClick = { /* TODO */ },
+        onClick = onClick,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFFEF4444)
@@ -158,7 +215,7 @@ fun NextButton() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Selanjutnya",
+                text = text,
                 fontFamily = Roboto,
                 fontSize = 15.sp,
                 color = Color.White
@@ -168,13 +225,12 @@ fun NextButton() {
 
             Icon(
                 imageVector = Icons.Default.ArrowForward,
-                contentDescription = "Next",
+                contentDescription = null,
                 tint = Color.White
             )
         }
     }
 }
-
 
 @Composable
 fun DotsIndicator(
