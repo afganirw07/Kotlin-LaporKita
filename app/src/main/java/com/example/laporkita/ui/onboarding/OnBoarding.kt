@@ -1,7 +1,5 @@
 package com.example.laporkita.ui.onboarding
-
 import android.os.Bundle
-import android.service.autofill.OnClickAction
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -20,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.animation.Crossfade
 import androidx.compose.ui.unit.sp
 import com.example.laporkita.R
 import com.example.laporkita.ui.onboarding.ui.theme.LaporKitaTheme
@@ -71,11 +70,10 @@ val onboardingData = listOf(
 fun OnBoardingScreen() {
     var currentPage by remember { mutableStateOf(0) }
 
-    val item = onboardingData[currentPage]
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+
         Header(
             currentPage = currentPage,
             onSkipClick = {
@@ -83,18 +81,25 @@ fun OnBoardingScreen() {
             }
         )
 
-        Content(
-            item = item,
-            currentPage = currentPage,
-            onNextClick = {
-                if (currentPage < onboardingData.lastIndex) {
-                    currentPage++
-                } else {
-                    println("HelloWorld")
-                }
-            },
+        Crossfade(
+            targetState = currentPage,
             modifier = Modifier.align(Alignment.Center)
-        )
+        ) { page ->
+
+            val item = onboardingData[page]
+
+            Content(
+                item = item,
+                currentPage = page,
+                onNextClick = {
+                    if (page < onboardingData.lastIndex) {
+                        currentPage++
+                    } else {
+                        println("HelloWorld")
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -154,18 +159,18 @@ fun Content(
         TitleText(item.title)
         DescriptionText(item.description)
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
         DotsIndicator(
             totalDots = onboardingData.size,
             selectedIndex = currentPage
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         NextButton(
             text = item.buttonText,
-            onClick = onNextClick
+            onClick = onNextClick,
         )
     }
 }
@@ -209,7 +214,8 @@ fun NextButton(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(52.dp)
+            .height(50.dp)
+
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -245,13 +251,15 @@ fun DotsIndicator(
             Box(
                 modifier = Modifier
                     .padding(4.dp)
+                    .height(8.dp)
+                    .width(if (index == selectedIndex) 25.dp else 8.dp)
                     .size(if (index == selectedIndex) 12.dp else 8.dp)
                     .background(
                         color = if (index == selectedIndex)
                             Color(0xFFEF4444)
                         else
                             Color(0xFFD1D5DB),
-                        shape = CircleShape
+                        shape = RoundedCornerShape( 50)
                     )
             )
         }
