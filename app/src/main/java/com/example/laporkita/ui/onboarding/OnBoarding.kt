@@ -1,11 +1,11 @@
 package com.example.laporkita.ui.onboarding
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.animation.Crossfade
 import androidx.compose.ui.unit.sp
 import com.example.laporkita.R
+import com.example.laporkita.ui.login.login
 import com.example.laporkita.ui.onboarding.ui.theme.LaporKitaTheme
+import androidx.compose.ui.platform.LocalContext
 
 class OnBoardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +62,7 @@ val onboardingData = listOf(
     ),
     OnBoardingItem(
         R.drawable.boarding3,
-        "Pantau Progres Laporan",
+        "Pantau Progres Laporan\nSecara Real-Time",
         "Lihat status dan perkembangan laporanmu secara transparan dan real-time.",
         "Mulai Sekarang"
     )
@@ -69,7 +71,7 @@ val onboardingData = listOf(
 @Composable
 fun OnBoardingScreen() {
     var currentPage by remember { mutableStateOf(0) }
-
+    val context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -95,7 +97,8 @@ fun OnBoardingScreen() {
                     if (page < onboardingData.lastIndex) {
                         currentPage++
                     } else {
-                        println("HelloWorld")
+                        val intent = Intent(context, login::class.java)
+                        context.startActivity(intent)
                     }
                 }
             )

@@ -2,4 +2,6 @@
     <string name="app_name">Lapor Kita</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_on_boarding">OnBoarding</string>
+    <string name="title_activity_login">login</string>
+    <string name="title_activity_register">Register</string>
 </resources>
